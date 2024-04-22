@@ -998,3 +998,14 @@ h6 {
     background-color: red;
     color: white;
 }
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

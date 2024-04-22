@@ -41,7 +41,6 @@ class SignUpController extends Controller
     }
     public function inputdata(Request $request)
     {
-        // Validasi input
         $validatedData = $request->validate([
             'name' => ['required', 'min:4', 'max:20'],
             'email' => ['required', 'min:5', 'max:50', Rule::unique('users', 'email')],

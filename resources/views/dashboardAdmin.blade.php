@@ -46,14 +46,26 @@
                         <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
                             @foreach ($data as $product)
                                 <div class="col product-item" data-category="{{ $product->category }}">
+                                    <form action="{{ route('deleteproduct', ['id' => $product->id]) }}" method="POST"
+                                        class="delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn remove-product"><i
+                                                class="fas fa-trash-alt"></i></button>
+                                    </form>
                                     <figure>
-                                        <h6>{{ $product->jenis }}</h6>
+                                        <img src="{{ asset('storage/image/' . $product->foto) }}"
+                                            alt="{{ $product->nama }}">
                                     </figure>
                                     <h3 class="product-title">{{ $product->nama }}</h3>
                                     <span class="price text-primary">Rp.{{ $product->harga }}</span>
-                                    <span class="qty">{{ $product->jumlah - $product->quantity }} Unit</span>
+                                    <span class="qty">{{ $product->stok }} Unit</span>
+
                                 </div>
                             @endforeach
+
+
+
 
 
                             <div id="cartPopup" class="cart-popup ">
@@ -66,6 +78,32 @@
         </div>
     </section>
     <script>
+        function deleteProduct(productId) {
+            if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+                fetch(`/products/${productId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal menghapus produk');
+                        }
+                        const productElement = document.querySelector(`.product-item[data-id="${productId}"]`);
+                        if (productElement) {
+                            productElement.remove();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat menghapus produk');
+                    });
+            }
+        }
+
+
+
         var cartItems = [];
 
         function updateQuantity(action, target) {
@@ -129,7 +167,6 @@
                     break;
                 }
             }
-
             if (found) {
                 var cartPopup = document.getElementById('cartPopup');
                 cartPopup.innerHTML = 'Produk sudah ada di keranjang.';
@@ -138,7 +175,8 @@
                     cartPopup.classList.remove('show');
                 }, 2000);
             } else {
-                var cartPopup = document.getElementById('cartPopup');
+                var
+                    cartPopup = document.getElementById('cartPopup');
                 cartPopup.innerHTML = 'berhasil memasukkan barang ke keranjang'
                 cartPopup.classList.add('show');
                 setTimeout(function() {
@@ -147,13 +185,9 @@
                 cartItems.push(item);
                 updateCartUI();
                 saveCartToStorage();
-
                 quantityInput.value = 0;
             }
-
         }
-
-
 
         function loadCartFromStorage() {
             var storedCartItems = localStorage.getItem('cartItems');
@@ -163,49 +197,48 @@
             }
         }
 
-
         function saveCartToStorage() {
             localStorage.setItem('cartItems', JSON.stringify(cartItems));
         }
-
-
-
         window.onload = loadCartFromStorage;
 
-
-        function closeCartPopup() {
+        function
+        closeCartPopup() {
             var cartPopup = document.getElementById('cartPopup');
             cartPopup.classList.remove('show');
         }
-
-        var productItems = document.querySelectorAll('.product-item');
+        var
+            productItems = document.querySelectorAll('.product-item');
         productItems.forEach(function(item, index) {
-            var itemNumber = index + 1;
+            var
+                itemNumber = index + 1;
             item.dataset.itemNumber = itemNumber;
         });
-        document.addEventListener("DOMContentLoaded", function() {
-            function showProductsByCategory(category) {
-                var productItems = document.querySelectorAll('.product-item');
-                productItems.forEach(function(item) {
-                    var itemCategory = item.dataset.category;
-                    if (itemCategory === category || category === 'All') {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
+        document.addEventListener("DOMContentLoaded",
+            function() {
+                function showProductsByCategory(category) {
+                    var
+                        productItems = document.querySelectorAll('.product-item');
+                    productItems.forEach(function(item) {
+                        var
+                            itemCategory = item.dataset.category;
+                        if (itemCategory === category || category === 'All') {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }
+                var
+                    categoryLinks = document.querySelectorAll('.category-item');
+                categoryLinks.forEach(function(link) {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        var category = link.dataset.category;
+                        showProductsByCategory(category);
+                    });
                 });
-            }
-
-            var categoryLinks = document.querySelectorAll('.category-item');
-            categoryLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    var category = link.dataset.category;
-                    showProductsByCategory(category);
-                });
+                showProductsByCategory('All');
             });
-
-            showProductsByCategory('All');
-        });
     </script>
 @endsection

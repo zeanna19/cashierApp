@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth', 'ceklevel: admin, petugas'], function () {
 	Route::get('/logout', [SessionsController::class, 'destroy']);
 	Route::post('/checkout', [SalesHistoryController::class, 'checkout']);
 	Route::post('/checkoutdata', [SalesHistoryController::class, 'checkoutdata'])->name('checkoutdata');
+	Route::post('/AddToCart', [SalesHistoryController::class, 'AddToCart'])->name('AddToCart');
 });
 
 Route::group(
@@ -45,11 +46,12 @@ Route::group(
 		Route::get('/dashboardAdmin', [BarangController::class, 'index'])->name('dashboardAdmin');
 		Route::get('/AddProduct', [BarangController::class, 'addProduct'])->name('addProduct');
 		Route::post('/insertdata', [BarangController::class, 'insertdata'])->name('insertdata');
+		Route::post('/update-stok/{id}/{quantity}', [BarangController::class, 'update-stok'])->name('update-stok');
 
 
 		Route::get('/edit/{id}', [BarangController::class, 'editdata'])->name('editdata');
 		Route::post('/updatedata/{id}', [BarangController::class, 'updatedata'])->name('updatedata');
-		Route::get('/delete/{id}', [BarangController::class, 'delete'])->name('delete');
+		Route::delete('/deleteproduct/{id}', [BarangController::class, 'deleteproduct'])->name('deleteproduct');
 
 
 		Route::get('histori', [SalesHistoryController::class, 'histori'])->name('histori');

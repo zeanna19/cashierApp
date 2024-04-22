@@ -22,7 +22,8 @@ return new class extends Migration
             ]);
             $table->integer('harga');
             $table->integer('jumlah');
-            $table->integer('foto')->nullable();
+            $table->integer('stok');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

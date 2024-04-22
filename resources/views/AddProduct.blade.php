@@ -29,7 +29,7 @@
             <div class="col">
                 <div class="card mt-4">
                     <div class="card-body">
-                        <form action="/insertdata" method="POST">
+                        <form action="/insertdata" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama</label>
@@ -50,11 +50,20 @@
                                 <input type="number" name="harga" class="form-control" id="harga" required>
                             </div>
                             <div class="mb-3">
-                                <label for="jumlah" class="form-label">Jumlah baranag</label>
+                                <label for="jumlah" class="form-label">Jumlah barang</label>
                                 <input type="number" name="jumlah" class="form-control" id="jumlah" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="stok" class="form-label">Stok barang</label>
+                                <input type="number" name="stok" class="form-control" id="stok" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="foto" class="form-label">Foto</label>
+                                <input type="file" name="foto" class="form-control" id="foto" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
+
                     </div>
                 </div>
             </div>

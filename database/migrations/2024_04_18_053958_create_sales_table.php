@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('jumlahBayar');
+            $table->enum('status', [
+                'lunas',
+                'belum lunas',
+                'belum bayar',
+            ]);
             $table->decimal('total_price', 10, 2);
             $table->integer('total_quantity');
             $table->timestamps();

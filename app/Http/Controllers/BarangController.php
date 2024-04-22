@@ -25,9 +25,24 @@ class BarangController extends Controller
 
     public function insertdata(Request $request)
     {
-        Barang::create($request->all());
+        $foto = $request->file('foto');
+        $path = $foto->store('public/image');
+
+        $nama_foto = basename($path);
+
+        Barang::create([
+            'nama' => $request->nama,
+            'jenis' => $request->jenis,
+            'harga' => $request->harga,
+            'jumlah' => $request->jumlah,
+            'stok' => $request->stok,
+            'foto' => $nama_foto,
+        ]);
+
         return redirect()->route('dashboardAdmin');
     }
+
+
     public function editdata($id)
     {
         $data = Barang::find($id);
@@ -42,11 +57,13 @@ class BarangController extends Controller
         return redirect()->route('dashboardAdmin');
     }
 
-    public function delete($id)
+    public function deleteproduct($id)
     {
-        $data = Barang::find($id);
-        $data->delete();
-        return redirect()->route('dashboardAdmin');
+        $product = Barang::findOrFail($id);
+
+        $product->delete();
+
+        return redirect()->back()->with('success', 'Produk berhasil dihapus');
     }
 
     public function pinjamBarang($id)

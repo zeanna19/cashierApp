@@ -91,7 +91,6 @@
                 <span class="badge bg-primary rounded-pill" id="cartItemCount">0</span>
             </h4>
             <ul class="list-group mb-3" id="cartItemList">
-                <!-- List of items will be dynamically added here -->
             </ul>
 
             <form role="form" method="POST" action="/checkoutdata" onsubmit="return validateForm()">
@@ -104,6 +103,15 @@
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                     @enderror
                 </div>
+                <label for="name">Jumlah bayar</label>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="jumlahBayar" id="jumlahBayar"
+                        placeholder="Jumlah Bayar">
+                    @error('jumlahBayar')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
+
 
                 <div>
                     <span>Total: <span class="badge bg-primary rounded-pill" id="totalQuantity"></span></span>
@@ -225,15 +233,14 @@
         var customerName = document.getElementById('nameCustomer').value;
         if (customerName.trim() === '') {
             alert('Please enter your name.');
-            return false; // Prevent form submission
+            return false;
         }
-        updateCartUI(); // Update cart UI before submitting form
-        return true; // Allow form submission
+        updateCartUI();
+        return true;
     }
 
 
     function updateCartUI() {
-
         var cartItemList = document.getElementById('cartItemList');
         cartItemList.innerHTML = '';
         var itemCountElement = document.getElementById('cartItemCount');
@@ -246,19 +253,19 @@
             var listItem = document.createElement('li');
             listItem.className = 'list-group-item d-flex justify-content-between lh-sm';
             listItem.innerHTML = `
-            <div>
-                <h6 class="my-0">${item.name}</h6>
-                <small class="text-muted">Quantity: 
-                    <button class="btn btn-sm btn-primary mx-1" onclick="decreaseQuantity(${index})">-</button>
-                    <span id="quantity_${index}">${item.quantity}</span>
-                    <button class="btn btn-sm btn-primary mx-1" onclick="increaseQuantity(${index})">+</button>
-                </small>
-            </div>
-            <div>
-                <span class="text-muted">${item.total}</span>
-                <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})" data-item-id="${item.id}">Remove</button>
-            </div>
-        `;
+        <div>
+            <h6 class="my-0">${item.name}</h6>
+            <small class="text-muted">Quantity: 
+                <button class="btn btn-sm btn-primary mx-1" onclick="decreaseQuantity(${index})">-</button>
+                <span id="quantity_${index}">${item.quantity}</span>
+                <button class="btn btn-sm btn-primary mx-1" onclick="increaseQuantity(${index})">+</button>
+            </small>
+        </div>
+        <div>
+            <span class="text-muted">${item.total}</span>
+            <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})" data-item-id="${item.id}">Remove</button>
+        </div>
+    `;
             cartItemList.appendChild(listItem);
             totalPrice += item.total;
             totalQuantity += item.quantity;
@@ -272,11 +279,19 @@
         });
         cartTotalElement.innerText = formatter.format(totalPrice);
 
+        var jumlahBayar = parseFloat(document.getElementById('jumlahBayar').value);
+        var status = jumlahBayar >= totalPrice ? 'lunas' : 'belum lunas';
+        var kembalian = jumlahBayar - totalPrice;
+
         var checkoutData = {
             name: document.getElementById('nameCustomer').value,
+            jumlahBayar: jumlahBayar,
             total_price: totalPrice,
-            total_quantity: totalQuantity
+            total_quantity: totalQuantity,
+            status: status,
+            kembalian: kembalian
         };
+
         fetch('/checkoutdata', {
                 method: 'POST',
                 headers: {
@@ -294,7 +309,7 @@
             .then(data => {
                 console.log('Data sent successfully:', data);
                 alert('Checkout berhasil');
-                // Clear the local storage
+
                 localStorage.clear();
             })
             .catch(error => {
@@ -403,43 +418,4 @@
         event.preventDefault();
         performSearch();
     });
-
-
-    function checkout() {
-        var cartItems = document.querySelectorAll('#cartItemList .list-group-item');
-        var items = [];
-
-        cartItems.forEach(function(item) {
-            var itemName = item.querySelector('h6').innerText;
-            var itemQuantity = parseInt(item.querySelector('.text-muted span').innerText);
-            var itemPrice = parseFloat(item.querySelector('.text-muted').previousElementSibling.innerText
-                .replace('Rp. ', '').replace(',', ''));
-
-            items.push({
-                name: itemName,
-                quantity: itemQuantity,
-                price: itemPrice
-            });
-        });
-
-        // Kirim data pesanan ke server
-        fetch('/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    items: items
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                // Handle response if needed
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
 </script>

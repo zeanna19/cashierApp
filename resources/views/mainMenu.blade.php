@@ -28,64 +28,134 @@
 
 
 
+    @if (auth()->user()->level == 'petugas')
+        <section class="py-5">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bootstrap-tabs product-tabs">
+                            <div class="tabs-header d-flex justify-content-between border-bottom my-5">
+                                <h3>select product</h3>
 
-    <section class="py-5">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="bootstrap-tabs product-tabs">
-                        <div class="tabs-header d-flex justify-content-between border-bottom my-5">
-                            <h3>select product</h3>
+                            </div>
+                            <div id="search-results"></div>
 
-                        </div>
-                        <div id="search-results"></div>
+                            <div
+                                class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
+                                @foreach ($data as $product)
+                                    <div class="col product-item" data-category="{{ $product->category }}">
+                                        <figure>
+                                            <img src="{{ asset('storage/image/' . $product->foto) }}"
+                                                alt="{{ $product->nama }}">
 
-                        <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
-                            @foreach ($data as $product)
-                                <div class="col product-item" data-category="{{ $product->jenis }}"
-                                    data-product-name="{{ $product->nama }}">
-                                    <figure>
-                                        <h6>{{ $product->jenis }}</h6>
-                                    </figure>
-                                    <h3 class="product-title">{{ $product->nama }}</h3>
-                                    <span class="price text-primary">Rp.{{ $product->harga }}</span>
-                                    <span class="qty">{{ $product->jumlah }} Unit</span>
+                                        </figure>
+                                        <h3 class="product-title">{{ $product->nama }}</h3>
+                                        <span class="price text-primary">Rp.{{ $product->harga }}</span>
 
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="input-group product-qty">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="quantity-left-minus btn btn-danger btn-number"
-                                                    data-type="minus" data-target="quantity{{ $loop->iteration }}"
-                                                    onclick="updateQuantity('minus', 'quantity{{ $loop->iteration }}')">
-                                                    <svg width="16" height="16">
-                                                        <use xlink:href="#minus"></use>
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                            <input type="text" id="quantity{{ $loop->iteration }}"
-                                                name="quantity{{ $loop->iteration }}" class="form-control input-number"
-                                                value="0" data-product-price="{{ $product->harga }}">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-success btn-number" data-type="plus"
-                                                    data-target="quantity{{ $loop->iteration }}"
-                                                    onclick="updateQuantity('plus', 'quantity{{ $loop->iteration }}')">+</button>
-                                            </span>
+
+
+
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="input-group product-qty">
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                        class="quantity-left-minus btn btn-danger btn-number"
+                                                        data-type="minus" data-target="quantity{{ $loop->iteration }}"
+                                                        onclick="updateQuantity('minus', 'quantity{{ $loop->iteration }}')">
+                                                        <svg width="16" height="16">
+                                                            <use xlink:href="#minus"></use>
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                                <input type="text" id="quantity{{ $loop->iteration }}"
+                                                    name="quantity{{ $loop->iteration }}" class="form-control input-number"
+                                                    value="0" data-product-price="{{ $product->harga }}">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success btn-number"
+                                                        data-type="plus" data-target="quantity{{ $loop->iteration }}"
+                                                        onclick="updateQuantity('plus', 'quantity{{ $loop->iteration }}')">+</button>
+                                                </span>
+                                            </div>
+                                            <button class="btn btn-primary btn-cart p-3"
+                                                onclick="addToCart('quantity{{ $loop->iteration }}')">Add to Cart</button>
                                         </div>
-                                        <button class="btn btn-primary btn-cart p-3"
-                                            onclick="addToCart('quantity{{ $loop->iteration }}')">Add to Cart</button>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
 
-                            <div id="cartPopup" class="cart-popup ">
-                                <span class="close-popup" onclick="closeCartPopup()">&times;</span>
+                                <div id="cartPopup" class="cart-popup ">
+                                    <span class="close-popup" onclick="closeCartPopup()">&times;</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
+    @if (auth()->user()->level == 'admin')
+        <section class="py-5">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bootstrap-tabs product-tabs">
+                            <div class="tabs-header d-flex justify-content-between border-bottom my-5">
+                                <h3>select product</h3>
+
+                            </div>
+                            <div id="search-results"></div>
+
+                            <div
+                                class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
+                                @foreach ($data as $product)
+                                    <div class="col product-item" data-category="{{ $product->category }}">
+                                        <figure>
+                                            <img src="{{ asset('storage/image/' . $product->foto) }}"
+                                                alt="{{ $product->nama }}">
+
+                                        </figure>
+                                        <h3 class="product-title">{{ $product->nama }}</h3>
+                                        <span class="price text-primary">Rp.{{ $product->harga }}</span>
+
+
+
+
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="input-group product-qty">
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                        class="quantity-left-minus btn btn-danger btn-number"
+                                                        data-type="minus" data-target="quantity{{ $loop->iteration }}"
+                                                        onclick="updateQuantity('minus', 'quantity{{ $loop->iteration }}')">
+                                                        <svg width="16" height="16">
+                                                            <use xlink:href="#minus"></use>
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                                <input type="text" id="quantity{{ $loop->iteration }}"
+                                                    name="quantity{{ $loop->iteration }}" class="form-control input-number"
+                                                    value="0" data-product-price="{{ $product->harga }}">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success btn-number"
+                                                        data-type="plus" data-target="quantity{{ $loop->iteration }}"
+                                                        onclick="updateQuantity('plus', 'quantity{{ $loop->iteration }}')">+</button>
+                                                </span>
+                                            </div>
+                                            <button class="btn btn-primary btn-cart p-3"
+                                                onclick="addToCart('quantity{{ $loop->iteration }}')">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <div id="cartPopup" class="cart-popup ">
+                                    <span class="close-popup" onclick="closeCartPopup()">&times;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
     <script>
         var cartItems = [];
 

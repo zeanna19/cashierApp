@@ -13,7 +13,6 @@ class AddToSale extends Controller
         $price = $request->input('price');
         $quantity = $request->input('quantity');
 
-        // Simpan data ke dalam tabel sale_items
         $saleItem = new SalesItem();
         $saleItem->productName = $productName;
         $saleItem->price = $price;
