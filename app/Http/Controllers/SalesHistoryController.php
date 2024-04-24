@@ -45,13 +45,39 @@ class SalesHistoryController extends Controller
 
     public function histori()
     {
-        $data = Sales::all();
+        $data = Sales::orderBy('created_at', 'desc')->get();
         return view('histori', compact('data'));
     }
+
     public function apus($id)
     {
         $data = Sales::find($id);
         $data->delete();
+        return redirect()->route('histori');
+    }
+
+    public function edit($id)
+    {
+        $data = Sales::find($id);
+        return view('edit', compact('data'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = Sales::find($id);
+        if (!$data) {
+            return redirect()->route('histori')->with('error', 'Data penjualan tidak ditemukan.');
+        }
+        $jumlahBayarDatabase = $data->jumlahBayar;
+        $jumlahBayarBaru = $request->input('bayarBaru');
+        $jumlahBayarTotal = $jumlahBayarDatabase + $jumlahBayarBaru;
+        $data->jumlahBayar = $jumlahBayarTotal;
+        if ($jumlahBayarTotal >= $data->total_price) {
+            $data->status = 'lunas';
+        }
+
+        $data->update($request->all());
+
         return redirect()->route('histori');
     }
 }

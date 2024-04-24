@@ -11,22 +11,67 @@
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                        <li>
-                            <a class="nav-link mx-1" href="histori">histori</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="tables">Petugas</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="dashboardAdmin">Item List</a>
-                        </li>
+                        <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
+                            <li>
+                                <a class="nav-link mx-1" href="dashboard">Dashboard</a>
+                            </li>
+                            <li>
+                                <a class="nav-link mx-1" href="tables">Petugas</a>
+                            </li>
+                            <li>
+                                <a class="nav-link mx-1" href="itemList">Item List</a>
+                            </li>
+                            <li>
+                                <a class="nav-link mx-1" href="histori">history transaksi</a>
+                            </li>
+                        </ul>
                     </ul>
                 </div>
             </div>
         </nav>
     @endif
 
+    @if (auth()->user()->level == 'petugas')
+        <section class="py-5 overflow-hidden">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
 
+                        <div class="section-header d-flex flex-wrap justify-content-between mb-5">
+                            <h2 class="section-title">Category</h2>
+                            @if (auth()->user()->level == 'admin')
+                                <a href="AddKategori">
+                                    <button type="button" class="btn btn-success">Tambah kategori</button>
+                                </a>
+                            @endif
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="category-carousel swiper">
+                            <div class="swiper-wrapper">
+                                <a href="#" class="nav-link category-item swiper-slide" data-kategori-id="semua">
+                                    <h3 class="category-title">Semua</h3>
+                                </a>
+                                @foreach ($kategori as $Kategori)
+                                    <a href="#" class="nav-link category-item swiper-slide"
+                                        data-kategori-id="{{ $Kategori->id }}">
+                                        <h3 class="category-title">{{ $Kategori->jenis }}</h3>
+                                    </a>
+                                @endforeach
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
     @if (auth()->user()->level == 'petugas')
         <section class="py-5">
@@ -40,10 +85,10 @@
                             </div>
                             <div id="search-results"></div>
 
-                            <div
-                                class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
+                            <div class=" row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
                                 @foreach ($data as $product)
-                                    <div class="col product-item" data-category="{{ $product->category }}">
+                                    <div class="col product-item" data-kategori-id="{{ $product->kategori_id }}">
+
                                         <figure>
                                             <img src="{{ asset('storage/image/' . $product->foto) }}"
                                                 alt="{{ $product->nama }}">
@@ -51,6 +96,7 @@
                                         </figure>
                                         <h3 class="product-title">{{ $product->nama }}</h3>
                                         <span class="price text-primary">Rp.{{ $product->harga }}</span>
+                                        <span class="qty">{{ $product->kategori->jenis }}</span>
 
 
 
@@ -92,70 +138,7 @@
             </div>
         </section>
     @endif
-    @if (auth()->user()->level == 'admin')
-        <section class="py-5">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="bootstrap-tabs product-tabs">
-                            <div class="tabs-header d-flex justify-content-between border-bottom my-5">
-                                <h3>select product</h3>
 
-                            </div>
-                            <div id="search-results"></div>
-
-                            <div
-                                class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
-                                @foreach ($data as $product)
-                                    <div class="col product-item" data-category="{{ $product->category }}">
-                                        <figure>
-                                            <img src="{{ asset('storage/image/' . $product->foto) }}"
-                                                alt="{{ $product->nama }}">
-
-                                        </figure>
-                                        <h3 class="product-title">{{ $product->nama }}</h3>
-                                        <span class="price text-primary">Rp.{{ $product->harga }}</span>
-
-
-
-
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="input-group product-qty">
-                                                <span class="input-group-btn">
-                                                    <button type="button"
-                                                        class="quantity-left-minus btn btn-danger btn-number"
-                                                        data-type="minus" data-target="quantity{{ $loop->iteration }}"
-                                                        onclick="updateQuantity('minus', 'quantity{{ $loop->iteration }}')">
-                                                        <svg width="16" height="16">
-                                                            <use xlink:href="#minus"></use>
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                                <input type="text" id="quantity{{ $loop->iteration }}"
-                                                    name="quantity{{ $loop->iteration }}" class="form-control input-number"
-                                                    value="0" data-product-price="{{ $product->harga }}">
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-success btn-number"
-                                                        data-type="plus" data-target="quantity{{ $loop->iteration }}"
-                                                        onclick="updateQuantity('plus', 'quantity{{ $loop->iteration }}')">+</button>
-                                                </span>
-                                            </div>
-                                            <button class="btn btn-primary btn-cart p-3"
-                                                onclick="addToCart('quantity{{ $loop->iteration }}')">Add to Cart</button>
-                                        </div>
-                                    </div>
-                                @endforeach
-
-                                <div id="cartPopup" class="cart-popup ">
-                                    <span class="close-popup" onclick="closeCartPopup()">&times;</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    @endif
     <script>
         var cartItems = [];
 
@@ -298,5 +281,30 @@
 
             showProductsByCategory('All');
         });
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', event => {
+                    event.preventDefault();
+                    const kategoriId = item.dataset.kategoriId;
+                    filterBarangByKategori(kategoriId);
+                });
+            });
+        });
+
+
+        function filterBarangByKategori(kategoriId) {
+            const semuaBarang = document.querySelectorAll('.product-item');
+            semuaBarang.forEach(barang => {
+                const kategoriProduk = barang.dataset.kategoriId;
+                if (kategoriId === 'semua' || kategoriProduk === kategoriId) {
+                    barang.style.display = 'block';
+                } else {
+                    barang.style.display = 'none';
+                }
+            });
+        }
     </script>
 @endsection

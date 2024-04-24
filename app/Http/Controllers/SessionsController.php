@@ -24,9 +24,12 @@ class SessionsController extends Controller
 
         if (Auth::attempt($attributes)) {
             session()->regenerate();
-            return redirect('mainMenu')->with(['success' => 'You are logged in.']);
+            if (auth()->user()->level == 'admin') {
+                return redirect()->route('dashboard')->with(['success' => 'You are logged in.']);
+            } else {
+                return redirect()->route('mainMenu')->with(['success' => 'You are logged in.']);
+            }
         } else {
-
             return back()->withErrors(['email' => 'Email or password invalid.']);
         }
     }

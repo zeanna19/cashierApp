@@ -13,10 +13,13 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
                         <li>
+                            <a class="nav-link mx-1" href="dashboard">Dashboard</a>
+                        </li>
+                        <li>
                             <a class="nav-link mx-1" href="tables">Petugas</a>
                         </li>
                         <li>
-                            <a class="nav-link mx-1" href="dashboardAdmin">Item List</a>
+                            <a class="nav-link mx-1" href="itemList">Item List</a>
                         </li>
                         <li>
                             <a class="nav-link mx-1" href="histori">history transaksi</a>
@@ -63,7 +66,7 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <input type="level" class="form-control" placeholder="level" name="level" id="level"
+                                <input type="level" class="form-control" placeholder="role" name="level" id="level"
                                     aria-label="level" value="{{ old('level') }}">
                                 @error('level')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>

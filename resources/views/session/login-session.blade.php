@@ -34,9 +34,9 @@
                                     @enderror
                                 </div>
                                 <div class="mb-3">
-                                    <label>Level</label>
+                                    <label>Role</label>
 
-                                    <input type="level" class="form-control" placeholder="level" name="level"
+                                    <input type="level" class="form-control" placeholder="role" name="level"
                                         id="level" aria-label="level" value="{{ old('level') }}">
                                     @error('level')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>

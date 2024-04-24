@@ -12,10 +12,13 @@
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
                     <li>
+                        <a class="nav-link mx-1" href="dashboard">Dashboard</a>
+                    </li>
+                    <li>
                         <a class="nav-link mx-1" href="tables">Petugas</a>
                     </li>
                     <li>
-                        <a class="nav-link mx-1" href="dashboardAdmin">Item List</a>
+                        <a class="nav-link mx-1" href="itemList">Item List</a>
                     </li>
                     <li>
                         <a class="nav-link mx-1" href="histori">history transaksi</a>
@@ -38,7 +41,6 @@
                         <th scope="col">Nama</th>
                         <th scope="col">email</th>
                         <th scope="col">level</th>
-                        <th scope="col">password</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
@@ -52,7 +54,6 @@
                             <td>{{ $row->name }}</td>
                             <td>{{ $row->email }}</td>
                             <td>{{ $row->level }}</td>
-                            <td>{{ $row->password }}</td>
 
                             <td>
                                 <a href="/hapus/{{ $row->id }}">

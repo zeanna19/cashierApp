@@ -563,9 +563,9 @@ h6 {
 }
 
 /* product-grid */
-/* .product-grid {
-  gap: 25px;
-} */
+.product-grid {
+    gap: 25px;
+}
 
 .product-item {
     position: relative;
@@ -1008,4 +1008,23 @@ h6 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #strukContent,
+    #strukContent * {
+        visibility: visible;
+    }
+    #strukContent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
 }

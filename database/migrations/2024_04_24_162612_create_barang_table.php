@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('barangs', function (Blueprint $table) {
+        Schema::create('produk', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->enum('jenis', [
@@ -21,10 +21,10 @@ return new class extends Migration
                 'drinks',
             ]);
             $table->integer('harga');
-            $table->integer('jumlah');
-            $table->integer('stok');
             $table->string('foto')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('kategori_id')->nullable();
+            $table->foreign('kategori_id')->references('id')->on('kategori');
         });
     }
 
@@ -33,6 +33,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('barangs');
+        Schema::table('produk', function (Blueprint $table) {
+            $table->dropForeign(['kategori_id']);
+
+            $table->dropColumn('kategori_id');
+        });
+
+        Schema::dropIfExists('produk');
     }
 };

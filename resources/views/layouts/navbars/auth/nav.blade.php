@@ -1,15 +1,3 @@
-<div id="confirmation-overlay" class="confirmation-overlay">
-    <div class="confirmation-box">
-        <p>Yakin ingin hapus dari keranjang?</p>
-        <div class="button-container">
-            <button class="yes-button">Ya</button>
-            <button class="no-button">Tidak</button>
-        </div>
-    </div>
-</div>
-<div id="successPopup" class="cart-popup " style="z-index:9999">
-    <p id="success-message">Barang berhasil dihapus dari keranjang</p>
-</div>
 <div class="preloader-wrapper">
     <div class="preloader">
         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -210,7 +198,7 @@
                         </a>
                     </li>
                 </ul>
-                @if (auth()->user()->level == 'petugas')
+                @if (auth()->check() && auth()->user()->level == 'petugas' && !request()->is('histori'))
                     <div class="cart text-end d-none d-lg-block dropdown">
                         <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
                             data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
