@@ -153,14 +153,24 @@
         document.addEventListener('DOMContentLoaded', function() {
             function showProductsByCategory(category) {
                 var productItems = document.querySelectorAll('.product-item');
+                var productsFound =
+                    false;
+
                 productItems.forEach(function(item) {
                     var itemCategory = item.dataset.kategoriId;
                     if (itemCategory === category || category === 'semua') {
                         item.style.display = 'block';
+                        productsFound = true;
                     } else {
                         item.style.display = 'none';
                     }
                 });
+
+                if (!productsFound) {
+                    document.getElementById('no-product-message').style.display = 'block';
+                } else {
+                    document.getElementById('no-product-message').style.display = 'none';
+                }
             }
 
             var categoryLinks = document.querySelectorAll('.category-item');

@@ -277,23 +277,18 @@
         </div>
      
 
-@if ($data->isNotEmpty())
-    @foreach ($data as $sale)
-        @if ($sale->status !== 'lunas')
-            <hr>
-            <form id="jumlahBayarForm_{{ $sale->id }}" action="/update/{{ $sale->id }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="mb-3">
-                    <label for="bayarBaru_{{ $sale->id }}" class="form-label">Jumlah Bayar</label>
-                    <input type="number" class="form-control" id="bayarBaru_{{ $sale->id }}" name="bayarBaru" placeholder="jumlah bayar">
-                </div>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            </form>
-        @endif
-    @endforeach
+@if ($data->isNotEmpty() && $data->first()->status !== 'lunas')
+   <hr>
+    <form id="jumlahBayarForm" action="/update/{{ $data->first()->id }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="mb-3">
+            <label for="bayarBaru" class="form-label">Jumlah Bayar</label>
+            <input type="number" class="form-control" id="bayarBaru" name="bayarBaru" placeholder="jumlah bayar">
+        </div>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+    </form>
 @endif
-
 
 
 </div>

@@ -59,7 +59,9 @@
 
                             </div>
                             <div id="search-results"></div>
-
+                            <div id="no-product-message" class="text-center text-muted my-3" style="display: none;">
+                                <h4 class="text-danger">Tidak ada produk pada kategori ini</h4>
+                            </div>
                             <div class=" row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
                                 @foreach ($data as $product)
                                     <div class="col product-item" data-kategori-id="{{ $product->kategori_id }}">
@@ -118,6 +120,26 @@
     @endif
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var categoryItems = document.querySelectorAll('.category-item');
+            var noProductMessage = document.getElementById('no-product-message');
+            var productGrid = document.getElementById('product-grid');
+
+            categoryItems.forEach(function(category) {
+                category.addEventListener('click', function() {
+                    var categoryId = category.getAttribute('data-kategori-id');
+                    var productsInCategory = productGrid.querySelectorAll(
+                        '.product-item[data-kategori-id="' + categoryId + '"]');
+                    if (productsInCategory.length === 0 && categoryId !== 'semua') {
+                        noProductMessage.style.display = 'block';
+                    } else {
+                        noProductMessage.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+
         var cartItems = [];
 
         function updateQuantity(action, target) {
@@ -224,41 +246,41 @@
 
         window.onload = loadCartFromStorage;
 
-
-        function closeCartPopup() {
-            var cartPopup = document.getElementById('cartPopup');
-            cartPopup.classList.remove('show');
-        }
-
-        var productItems = document.querySelectorAll('.product-item');
-        productItems.forEach(function(item, index) {
-            var itemNumber = index + 1;
-            item.dataset.itemNumber = itemNumber;
-        });
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener('DOMContentLoaded', function() {
             function showProductsByCategory(category) {
                 var productItems = document.querySelectorAll('.product-item');
+                var productsFound =
+                    false;
+
                 productItems.forEach(function(item) {
-                    var itemCategory = item.dataset.category;
-                    if (itemCategory === category || category === 'All') {
+                    var itemCategory = item.dataset.kategoriId;
+                    if (itemCategory === category || category === 'semua') {
                         item.style.display = 'block';
+                        productsFound = true;
                     } else {
                         item.style.display = 'none';
                     }
                 });
+
+                if (!productsFound) {
+                    document.getElementById('no-product-message').style.display = 'block';
+                } else {
+                    document.getElementById('no-product-message').style.display = 'none';
+                }
             }
 
             var categoryLinks = document.querySelectorAll('.category-item');
             categoryLinks.forEach(function(link) {
                 link.addEventListener('click', function(event) {
                     event.preventDefault();
-                    var category = link.dataset.category;
+                    var category = link.dataset.kategoriId;
                     showProductsByCategory(category);
                 });
             });
 
-            showProductsByCategory('All');
+            showProductsByCategory('semua');
         });
+
 
 
 
