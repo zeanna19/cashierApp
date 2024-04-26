@@ -11,6 +11,7 @@ class HomeController extends Controller
     public function home()
     {
         $data = Barang::all();
-        return view('mainMenu', compact('data'));
+        $kategori = Kategori::all();
+        return view('mainMenu', compact('data', 'kategori'));
     }
 }

@@ -49,11 +49,18 @@ class SalesHistoryController extends Controller
         return view('histori', compact('data'));
     }
 
+
     public function apus($id)
     {
         $data = Sales::find($id);
-        $data->delete();
-        return redirect()->route('histori');
+
+        if ($data->status === 'lunas') {
+            $data->delete();
+        } else {
+            return redirect()->route('histori')->with('error', 'Transaksi harus lunas sebelum dihapus.');
+        }
+
+        return redirect()->route('histori')->with('success', 'Transaksi berhasil dihapus.');
     }
 
     public function edit($id)
@@ -75,9 +82,7 @@ class SalesHistoryController extends Controller
         if ($jumlahBayarTotal >= $data->total_price) {
             $data->status = 'lunas';
         }
-
         $data->update($request->all());
-
         return redirect()->route('histori');
     }
 }
