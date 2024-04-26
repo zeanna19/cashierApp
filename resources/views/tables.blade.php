@@ -1,32 +1,8 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-    <nav class="main-menu d-flex navbar navbar-expand-lg">
+    @include('layouts.navbars.auth.navbar')
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                    <li>
-                        <a class="nav-link mx-1" href="dashboard">Dashboard</a>
-                    </li>
-                    <li>
-                        <a class="nav-link mx-1" href="tables">Petugas</a>
-                    </li>
-                    <li>
-                        <a class="nav-link mx-1" href="itemList">Item List</a>
-                    </li>
-                    <li>
-                        <a class="nav-link mx-1" href="histori">history transaksi</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
     <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
 
         <div class="container-fluid py-4">
@@ -56,11 +32,22 @@
                             <td>{{ $row->level }}</td>
 
                             <td>
-                                <a href="/hapus/{{ $row->id }}">
-                                    <button type="button" class="btn btn-danger">hapus</button>
+                                <a href="/hapus/{{ $row->id }}" class="delete-link" data-id="{{ $row->id }}">
+                                    <button type="button" class="btn btn-danger">Hapus</button>
                                 </a>
-
                             </td>
+
+                            <div class="confirmation-background" id="confirmationBackground">
+                                <div class="confirmation-popup" id="confirmationPopup">
+                                    <div class="confirmation-content">
+                                        <p>Apakah Anda yakin ingin menghapus item ini?</p>
+                                        <button class="btn btn-blue" id="confirmDelete">Hapus</button>
+                                        <button class="btn btn-red" id="cancelDelete">Batal</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </tr>
                     @endforeach
                 </tbody>
@@ -68,4 +55,28 @@
 
         </div>
     </main>
+    <script>
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        const confirmationBackground = document.getElementById('confirmationBackground');
+        const confirmationPopup = document.getElementById('confirmationPopup');
+        const confirmDeleteButton = document.getElementById('confirmDelete');
+        const cancelDeleteButton = document.getElementById('cancelDelete');
+
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                confirmationBackground.style.display = 'block';
+                confirmationPopup.style.display = 'block';
+                const deleteUrl = link.getAttribute('href');
+                confirmDeleteButton.onclick = function() {
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+
+        cancelDeleteButton.onclick = function() {
+            confirmationBackground.style.display = 'none';
+            confirmationPopup.style.display = 'none';
+        };
+    </script>
 @endsection

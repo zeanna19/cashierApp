@@ -21,17 +21,16 @@ class BarangController extends Controller
     {
         $data = Barang::all();
         $kategori = Kategori::all();
-
         return view('dashboard', compact('data', 'kategori'));
     }
     public function mainMenu()
     {
-
-        $data = Barang::all();
         $kategori = Kategori::all();
+        $data = Barang::all();
 
-        return view('mainMenu', compact('data', 'kategori'));
+        return view('mainMenu', compact('kategori', 'data'));
     }
+
     public function addProduct()
     {
         $data = Barang::all();
@@ -98,6 +97,24 @@ class BarangController extends Controller
         $product->delete();
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus');
+    }
+    public function deletekategori($id)
+    {
+        $kategori = Kategori::findOrFail($id);
+
+
+        $produk = Barang::where('kategori_id', $id)->get();
+
+        foreach ($produk as $Produk) {
+            if (!empty($Produk->foto)) {
+                Storage::disk('public')->delete('image/' . $Produk->foto);
+            }
+            $Produk->delete();
+        }
+
+        $kategori->delete();
+
+        return redirect()->back()->with('success', 'Kategori dan produk yang terhubung berhasil dihapus');
     }
 
     public function loadBarangByKategori(Request $request)

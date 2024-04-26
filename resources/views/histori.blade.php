@@ -1,37 +1,18 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @if (auth()->user()->level == 'admin')
-        <nav class="main-menu d-flex navbar navbar-expand-lg">
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                        <li>
-                            <a class="nav-link mx-1" href="dashboard">Dashboard</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="tables">Petugas</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="itemList">Item List</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="histori">history transaksi</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        @include('layouts.navbars.auth.navbar')
     @endif
     <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
         <div class="container-fluid py-4">
-            <h3>History pembeli</h3>
+            <h3>Riwayat pembeli</h3>
             @if ($data->isEmpty())
                 <p>Tidak ada produk yang tersedia dalam histori.</p>
             @else
@@ -66,18 +47,32 @@
 
                                 <td>
                                     <button class="btn">
-                                        <a href="/apus/{{ $row->id }}">
+                                        <a href="/apus/{{ $row->id }}" class="delete-link"
+                                            data-id="{{ $row->id }}">
                                             <img src="assets/images/del_alt.png" alt="">
                                         </a>
+                                        @error('password')
+                                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                        @enderror
                                     </button>
                                     <button type="button" class="btn">
                                         <img src="assets/images/Desk.png" alt=""
                                             onclick="showStrukModal({{ json_encode($row) }})">
                                     </button>
-                                    <button type="button" class="btn">
-                                        <img src="assets/images/Paper.png" alt=""
-                                            onclick="showDetailModal({{ json_encode($row) }})">
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="showDetailModal({{ json_encode($row) }})">
+                                        edit
                                     </button>
+
+                                    <div class="confirmation-background" id="confirmationBackground">
+                                        <div class="confirmation-popup" id="confirmationPopup">
+                                            <div class="confirmation-content">
+                                                <p>Apakah Anda yakin ingin menghapus item ini?</p>
+                                                <button class="btn btn-blue" id="confirmDelete">Hapus</button>
+                                                <button class="btn btn-red" id="cancelDelete">Batal</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -129,6 +124,29 @@
         </div>
         </div>
         <script>
+            const deleteLinks = document.querySelectorAll('.delete-link');
+            const confirmationBackground = document.getElementById('confirmationBackground');
+            const confirmationPopup = document.getElementById('confirmationPopup');
+            const confirmDeleteButton = document.getElementById('confirmDelete');
+            const cancelDeleteButton = document.getElementById('cancelDelete');
+
+            deleteLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    confirmationBackground.style.display = 'block';
+                    confirmationPopup.style.display = 'block';
+                    const deleteUrl = link.getAttribute('href');
+                    confirmDeleteButton.onclick = function() {
+                        window.location.href = deleteUrl;
+                    }
+                });
+            });
+
+            cancelDeleteButton.onclick = function() {
+                confirmationBackground.style.display = 'none';
+                confirmationPopup.style.display = 'none';
+            };
+
             function showStrukModal(data) {
                 var detailContent = document.getElementById('strukContent');
                 var kembalianHTML = '';
@@ -216,6 +234,7 @@
 
             // model detail
             function showDetailModal(data) {
+                console.log("dataamodal", data);
                 var detailContent = document.getElementById('detailContent');
                 var kembalianHTML = '';
 

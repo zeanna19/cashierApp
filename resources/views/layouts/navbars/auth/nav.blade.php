@@ -81,12 +81,12 @@
             <ul class="list-group mb-3" id="cartItemList">
             </ul>
 
-            <form role="form" method="POST" action="/checkoutdata" onsubmit="return validateForm()">
+            <form role="form" method="POST" action="/checkoutdata" onsubmit="return validateForm()"
+                id="checkoutForm" style="display: none;">
                 @csrf
                 <label for="name">Name</label>
                 <div class="mb-3">
-                    <input type="text" class="form-control" name="name" id="nameCustomer" placeholder="Name"
-                        aria-label="Name" aria-describedby="name-addon">
+                    <input type="text" class="form-control" name="name" id="nameCustomer" placeholder="Name">
                     @error('name')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                     @enderror
@@ -100,7 +100,6 @@
                     @enderror
                 </div>
 
-
                 <div>
                     <span>Total: <span class="badge bg-primary rounded-pill" id="totalQuantity"></span></span>
                     <span id="cartTotal" class="text-primary"></span>
@@ -108,6 +107,7 @@
 
                 <button class="w-100 btn btn-primary btn-lg btn-checkout" type="submit">Continue to checkout</button>
             </form>
+
 
 
 
@@ -126,11 +126,11 @@
             <div class="col-sm-4 col-lg-3 text-center text-sm-start">
                 <div class="main-logo">
                     @if (auth()->user()->level == 'petugas')
-                        <a class="text-primary text-decoration-none" href="mainMenu">
+                        <a class="text-primary text-decoration-none" href="/">
                             <h1>CashierApp</h1>
                         </a>
                     @elseif (auth()->user()->level == 'admin')
-                        <a class="text-primary text-decoration-none" href="dashboardAdmin">
+                        <a class="text-primary text-decoration-none" href="dashboard">
                             <h1>CashierApp</h1>
                         </a>
                     @endif
@@ -160,7 +160,7 @@
                 <ul class="d-flex justify-content-end list-unstyled m-0">
                     @if (auth()->user()->level == 'petugas')
                         <li>
-                            <a class="nav-link mx-4" href="histori">histori</a>
+                            <a class="nav-link mx-4" href="histori">Riwayat</a>
                         </li>
                     @endif
                     <li>
@@ -199,12 +199,16 @@
                     </li>
                 </ul>
                 @if (auth()->check() && auth()->user()->level == 'petugas' && !request()->is('histori'))
-                    <div class="cart text-end d-none d-lg-block dropdown">
-                        <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
-                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                            <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
+                    <div class="cart-container">
+                        <span id="totalCartQuantity" class="text-muted mx-2"> 0</span>
+                        <div class="cart text-end d-none d-lg-block dropdown">
+                            <button class="btn border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
+                                aria-controls="offcanvasCart">
+                                <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
                     </div>
                 @endif
 
@@ -230,34 +234,49 @@
 
     function updateCartUI() {
         var cartItemList = document.getElementById('cartItemList');
+        var totalCartQuantityElement = document.getElementById('totalCartQuantity');
         cartItemList.innerHTML = '';
         var itemCountElement = document.getElementById('cartItemCount');
         var totalQuantityElement = document.getElementById('totalQuantity');
         var cartTotalElement = document.getElementById('cartTotal');
         var totalPrice = 0;
         var totalQuantity = 0;
+        var totalItems = 0;
 
+        if (cartItems.length === 0) {
+            cartItemList.innerHTML = '<li class="list-group-item">Keranjang masih kosong</li>';
+            itemCountElement.innerText = '0';
+            totalQuantityElement.innerText = '0';
+            cartTotalElement.innerText = 'Rp. 0';
+            checkoutForm.style.display = 'none';
+            totalCartQuantityElement.innerText = 'Total Items: 0';
+            return;
+        }
         cartItems.forEach(function(item, index) {
             var listItem = document.createElement('li');
             listItem.className = 'list-group-item d-flex justify-content-between lh-sm';
             listItem.innerHTML = `
-        <div>
-            <h6 class="my-0">${item.name}</h6>
-            <small class="text-muted">Quantity: 
-                <button class="btn btn-sm btn-primary mx-1" onclick="decreaseQuantity(${index})">-</button>
-                <span id="quantity_${index}">${item.quantity}</span>
-                <button class="btn btn-sm btn-primary mx-1" onclick="increaseQuantity(${index})">+</button>
-            </small>
-        </div>
-        <div>
-            <span class="text-muted">${item.total}</span>
-            <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})" data-item-id="${item.id}">Remove</button>
-        </div>
-    `;
+                    <div style="display: flex; flex-direction: row " >
+                        <div>
+                            <h6 class="my-0">${item.name}</h6>
+                            <small class="text-muted">Quantity: 
+                                <button class="btn btn-sm btn-primary mx-1" onclick="decreaseQuantity(${index})">-</button>
+                                <span id="quantity_${index}">${item.quantity}</span>
+                                <button class="btn btn-sm btn-primary mx-1" onclick="increaseQuantity(${index})">+</button>
+                        </div>
+                        </small>
+                    </div>
+                    <div>
+                        <span class="text-muted">${item.total}</span>
+                        <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})" data-item-id="${item.id}">Remove</button>
+                    </div>
+                `;
             cartItemList.appendChild(listItem);
             totalPrice += item.total;
             totalQuantity += item.quantity;
+            totalItems += 1;
         });
+
 
         itemCountElement.innerText = cartItems.length;
         totalQuantityElement.innerText = totalQuantity;
@@ -266,6 +285,10 @@
             currency: 'IDR'
         });
         cartTotalElement.innerText = formatter.format(totalPrice);
+
+        checkoutForm.style.display = 'block';
+
+        totalCartQuantityElement.innerText = +totalItems;
 
         var jumlahBayar = parseFloat(document.getElementById('jumlahBayar').value);
         var status = jumlahBayar >= totalPrice ? 'lunas' : 'belum lunas';
@@ -277,7 +300,8 @@
             total_price: totalPrice,
             total_quantity: totalQuantity,
             status: status,
-            kembalian: kembalian
+            kembalian: kembalian,
+            products: cartItems.map(item => item.name)
         };
 
         fetch('/checkoutdata', {
@@ -306,8 +330,6 @@
     }
 
 
-
-
     function increaseQuantity(index) {
         cartItems[index].quantity++;
         cartItems[index].total = cartItems[index].quantity * cartItems[index].price;
@@ -320,7 +342,6 @@
             cartItems[index].total = cartItems[index].quantity * cartItems[index].price;
             updateCartUI();
         } else {
-
             cartItems.splice(index, 1);
             updateCartUI();
         }
@@ -329,21 +350,9 @@
 
     // Fungsi untuk menghapus item dari keranjang
     function removeItem(id) {
-        document.getElementById("confirmation-overlay").addEventListener("click", function(event) {
-            if (event.target.classList.contains("yes-button")) {
-                var id = event.target.getAttribute("data-id");
-                removeItem(id);
-            } else if (event.target.classList.contains("no-button")) {
-                document.getElementById("confirmation-overlay").style.display = "none";
-            }
-        });
-
         var itemIndex = cartItems.findIndex(item => item.id === id);
 
-
-
         if (itemIndex !== -1) {
-
             cartItems.splice(itemIndex, 1);
             updateCartUI();
             saveCartToStorage();
@@ -356,11 +365,6 @@
             console.error("Item with ID " + id + " not found in cartItems array.");
         }
     }
-
-
-
-
-
 
     // fungsi search
     function performSearch() {

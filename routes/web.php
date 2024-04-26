@@ -50,6 +50,7 @@ Route::group(
 		Route::post('/insertdata', [BarangController::class, 'insertdata'])->name('insertdata');
 		Route::post('/update-stok/{id}/{quantity}', [BarangController::class, 'update-stok'])->name('update-stok');
 		Route::delete('/deleteproduct/{id}', [BarangController::class, 'deleteproduct'])->name('deleteproduct');
+		Route::delete('/deletekategori/{id}', [BarangController::class, 'deletekategori'])->name('deletekategori');
 		Route::get('/AddKategori', [BarangController::class, 'addKategori'])->name('addKategori');
 
 

@@ -30,9 +30,14 @@ class SessionsController extends Controller
                 return redirect()->route('mainMenu')->with(['success' => 'You are logged in.']);
             }
         } else {
-            return back()->withErrors(['email' => 'Email or password invalid.']);
+            if ($attributes['level'] === 'admin' || $attributes['level'] === 'petugas') {
+                return back()->withErrors(['email' => 'Invalid email or password or level']);
+            } else {
+                return back()->withErrors(['email' => 'Invalid email or password']);
+            }
         }
     }
+
 
     public function destroy()
     {

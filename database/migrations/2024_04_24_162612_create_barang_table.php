@@ -14,12 +14,7 @@ return new class extends Migration
         Schema::create('produk', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->enum('jenis', [
-                'food',
-                'breads',
-                'softDrinks',
-                'drinks',
-            ]);
+            $table->string('jenis');
             $table->integer('harga');
             $table->string('foto')->nullable();
             $table->timestamps();

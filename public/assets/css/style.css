@@ -949,61 +949,6 @@ h6 {
     }
 }
 
-/* category  */
-/* .swiper-wrapper {
-    padding-left: 10px;
-    padding-right: 10px;
-} */
-
-/* pop up hapus  */
-.confirmation-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999999;
-}
-
-.confirmation-box {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.button-container {
-    margin-top: 20px;
-}
-
-.yes-button,
-.no-button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.yes-button {
-    background-color: green;
-    color: white;
-}
-
-.no-button {
-    background-color: red;
-    color: white;
-}
-
-.detail-item {
-    display: flex;
-    flex-direction: column;
-}
-
 .flex {
     display: flex;
     justify-content: space-between;
@@ -1027,4 +972,63 @@ h6 {
         padding: 20px;
         box-sizing: border-box;
     }
+}
+
+.confirmation-background {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(
+        0,
+        0,
+        0,
+        0.5
+    ); /* Warna hitam dengan transparansi 50% */
+    z-index: 999; /* Pastikan lebih tinggi dari konten lain */
+}
+
+.confirmation-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Pastikan lebih tinggi dari latar belakang */
+}
+
+.confirmation-content {
+    text-align: center;
+}
+
+.btn-blue {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn-red {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.cart-container {
+    position: fixed;
+    bottom: 200px;
+    right: 50px;
+    z-index: 999;
+    background-color: var(--bs-primary);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.disabled-button {
+    pointer-events: none;
+    opacity: 0.5;
 }

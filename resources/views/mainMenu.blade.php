@@ -3,32 +3,7 @@
 
 @section('content')
     @if (auth()->user()->level == 'admin')
-        <nav class="main-menu d-flex navbar navbar-expand-lg">
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                        <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                            <li>
-                                <a class="nav-link mx-1" href="dashboard">Dashboard</a>
-                            </li>
-                            <li>
-                                <a class="nav-link mx-1" href="tables">Petugas</a>
-                            </li>
-                            <li>
-                                <a class="nav-link mx-1" href="itemList">Item List</a>
-                            </li>
-                            <li>
-                                <a class="nav-link mx-1" href="histori">history transaksi</a>
-                            </li>
-                        </ul>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        @include('layouts.navbars.auth.navbar')
     @endif
 
     @if (auth()->user()->level == 'petugas')
@@ -103,7 +78,7 @@
 
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div class="input-group product-qty">
-                                                <span class="input-group-btn">
+                                                <div class="input-group-prepend">
                                                     <button type="button"
                                                         class="quantity-left-minus btn btn-danger btn-number"
                                                         data-type="minus" data-target="quantity{{ $loop->iteration }}"
@@ -112,19 +87,22 @@
                                                             <use xlink:href="#minus"></use>
                                                         </svg>
                                                     </button>
-                                                </span>
+                                                </div>
                                                 <input type="text" id="quantity{{ $loop->iteration }}"
                                                     name="quantity{{ $loop->iteration }}" class="form-control input-number"
                                                     value="0" data-product-price="{{ $product->harga }}">
-                                                <span class="input-group-btn">
+                                                <div class="input-group-append">
                                                     <button type="button" class="btn btn-success btn-number"
                                                         data-type="plus" data-target="quantity{{ $loop->iteration }}"
                                                         onclick="updateQuantity('plus', 'quantity{{ $loop->iteration }}')">+</button>
-                                                </span>
+                                                </div>
                                             </div>
                                             <button class="btn btn-primary btn-cart p-3"
-                                                onclick="addToCart('quantity{{ $loop->iteration }}')">Add to Cart</button>
+                                                onclick="addToCart('quantity{{ $loop->iteration }}')">Tambah
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </button>
                                         </div>
+
                                     </div>
                                 @endforeach
 

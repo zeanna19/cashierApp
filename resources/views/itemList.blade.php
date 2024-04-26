@@ -2,34 +2,7 @@
 
 
 @section('content')
-    <nav class="main-menu d-flex navbar navbar-expand-lg">
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                    <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                        <li>
-                            <a class="nav-link mx-1" href="dashboard">Dashboard</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="tables">Petugas</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="itemList">Item List</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="histori">history transaksi</a>
-                        </li>
-                    </ul>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('layouts.navbars.auth.navbar')
 
 
 
@@ -56,6 +29,13 @@
                                 <h3 class="category-title">Semua</h3>
                             </a>
                             @foreach ($kategori as $Kategori)
+                                <form action="{{ route('deletekategori', ['id' => $Kategori->id]) }}" method="POST"
+                                    class="delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn remove-product"><i
+                                            class="fas fa-trash-alt"></i></button>
+                                </form>
                                 <a href="#" class="nav-link category-item swiper-slide"
                                     data-kategori-id="{{ $Kategori->id }}">
                                     <h3 class="category-title">{{ $Kategori->jenis }}</h3>
@@ -85,8 +65,11 @@
                             </a>
                         </div>
                         <div id="search-results"></div>
-
-                        <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
+                        <div id="no-product-message" class="text-center text-muted my-3" style="display: none;">
+                            <h4 class="text-danger">Tidak ada produk pada kategori ini</h4>
+                        </div>
+                        <div id="product-grid"
+                            class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 ">
                             @foreach ($data as $product)
                                 <div class="col product-item" data-kategori-id="{{ $product->kategori_id }}">
                                     <form action="{{ route('deleteproduct', ['id' => $product->id]) }}" method="POST"
@@ -121,6 +104,26 @@
         </div>
     </section>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var categoryItems = document.querySelectorAll('.category-item');
+            var noProductMessage = document.getElementById('no-product-message');
+            var productGrid = document.getElementById('product-grid');
+
+            categoryItems.forEach(function(category) {
+                category.addEventListener('click', function() {
+                    var categoryId = category.getAttribute('data-kategori-id');
+                    var productsInCategory = productGrid.querySelectorAll(
+                        '.product-item[data-kategori-id="' + categoryId + '"]');
+                    if (productsInCategory.length === 0 && categoryId !== 'semua') {
+                        noProductMessage.style.display = 'block';
+                    } else {
+                        noProductMessage.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+
         function deleteProduct(productId) {
             if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
                 fetch(`/products/${productId}`, {
@@ -147,33 +150,30 @@
 
 
         // mengatur sesuai kategori
-        document.addEventListener("DOMContentLoaded",
-            function() {
-                function showProductsByCategory(category) {
-                    var
-                        productItems = document.querySelectorAll('.product-item');
-                    productItems.forEach(function(item) {
-                        var
-                            itemCategory = item.dataset.category;
-                        if (itemCategory === category || category === 'All') {
-                            item.style.display = 'block';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                }
-                var
-                    categoryLinks = document.querySelectorAll('.category-item');
-                categoryLinks.forEach(function(link) {
-                    link.addEventListener('click', function(event) {
-                        event.preventDefault();
-                        var category = link.dataset.category;
-                        showProductsByCategory(category);
-                    });
+        document.addEventListener('DOMContentLoaded', function() {
+            function showProductsByCategory(category) {
+                var productItems = document.querySelectorAll('.product-item');
+                productItems.forEach(function(item) {
+                    var itemCategory = item.dataset.kategoriId;
+                    if (itemCategory === category || category === 'semua') {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
-                showProductsByCategory('All');
+            }
+
+            var categoryLinks = document.querySelectorAll('.category-item');
+            categoryLinks.forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var category = link.dataset.kategoriId;
+                    showProductsByCategory(category);
+                });
             });
 
+            showProductsByCategory('semua');
+        });
 
 
 

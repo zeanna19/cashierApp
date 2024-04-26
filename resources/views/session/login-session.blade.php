@@ -47,10 +47,10 @@
                                     <button type="submit" class="btn btn-primary w-100 mt-4 mb-0">Sign
                                         in</button>
                                 </div>
-                                <p class="mb-4 text-sm mx-auto">
+                                {{-- <p class="mb-4 text-sm mx-auto">
                                     Don't have an account?
                                     <a href="register" class="text-success text-gradient font-weight-bold">Sign up</a>
-                                </p>
+                                </p> --}}
                             </form>
 
                         </div>

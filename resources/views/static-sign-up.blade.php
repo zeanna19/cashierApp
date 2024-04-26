@@ -2,32 +2,8 @@
 
 @section('content')
     <div class="container">
-        <nav class="main-menu d-flex navbar navbar-expand-lg">
+        @include('layouts.navbars.auth.navbar')
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                        <li>
-                            <a class="nav-link mx-1" href="dashboard">Dashboard</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="tables">Petugas</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="itemList">Item List</a>
-                        </li>
-                        <li>
-                            <a class="nav-link mx-1" href="histori">history transaksi</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
     </div>
     <div class="container mt-4">
         <div class="row justify-content-center">
@@ -39,7 +15,7 @@
                     <div class="login-wrap p-4 p-md-5">
                         <div class="d-flex">
                             <div class="w-100">
-                                <h3 class="mb-4">Sign up</h3>
+                                <h3 class="mb-4">Register</h3>
                             </div>
                         </div>
                         <form role="form text-left" method="POST" action="/inputdata">

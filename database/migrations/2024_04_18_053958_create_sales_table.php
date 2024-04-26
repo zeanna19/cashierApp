@@ -18,7 +18,6 @@ return new class extends Migration
             $table->enum('status', [
                 'lunas',
                 'belum lunas',
-                'belum bayar',
             ]);
             $table->decimal('total_price', 10, 2);
             $table->integer('total_quantity');
