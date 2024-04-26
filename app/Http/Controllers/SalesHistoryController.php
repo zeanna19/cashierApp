@@ -46,7 +46,12 @@ class SalesHistoryController extends Controller
     public function histori()
     {
         $data = Sales::orderBy('created_at', 'desc')->get();
-        return view('histori', compact('data'));
+        $product = [];
+
+        if (isset($_COOKIE['cartItems'])) {
+            $product = $_COOKIE['cartItems'];
+        }
+        return view('histori', compact('data', 'product'));
     }
 
     public function apus($id)

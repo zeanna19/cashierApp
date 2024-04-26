@@ -229,6 +229,7 @@
 
 
     function updateCartUI() {
+        console.log("triggered")
         var cartItemList = document.getElementById('cartItemList');
         cartItemList.innerHTML = '';
         var itemCountElement = document.getElementById('cartItemCount');
